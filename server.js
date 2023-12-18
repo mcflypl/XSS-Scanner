@@ -69,15 +69,15 @@ async function check_xss(url) {
 
                 const buttonsArray = await formArray.$$eval(
                     'input[type="submit"],button[type="submit"]',
-                    (subs) => subs.map((sub) => sub.id ? `#${sub.id}` : `.${sub.className.split(' ').join('.')}`)
+                    (subs) => subs.map(
+                        (sub) => sub.id
+                            ? `#${sub.id}`
+                            : (sub.className ? `.${sub.className.split(' ').join('.')}` : `[name="${sub.name}"`)
+                    )
                 );
 
                 const submitButton = buttonsArray[0];
                 await page2.click(submitButton);
-
-                page2.ge
-
-                console.log(page2.url());
 
                 newUrl = check_url(page2.url(), MALICIOUS_SCRIPT[script]);
 
@@ -85,7 +85,6 @@ async function check_xss(url) {
                     await page2.goto(newUrl);
                 }
             } catch (error) {
-                console.error(error);
                 await browser.close();
 
                 return error.message;
