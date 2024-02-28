@@ -90,7 +90,12 @@ async function check_xss(url) {
                     (subs) => subs.map(
                         (sub) => sub.id
                             ? `#${sub.id}`
-                            : (sub.className ? `.${sub.className.split(' ').join('.')}` : `[name="${sub.name}"`)
+                            : (sub.className
+                                ? `.${sub.className
+                                    .split(' ')
+                                    .map(className => className.replace(/([\\[\]#:])/g, '\\$1'))
+                                    .join('.')}`
+                                : `[name="${sub.name}"`)
                     )
                 );
 
